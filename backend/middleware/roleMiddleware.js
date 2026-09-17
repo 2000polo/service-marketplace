@@ -1,4 +1,4 @@
-const providerOnly = async (req, res, next) => {
+export const providerOnly = async (req, res, next) => {
     if(req.user.role !== "provider"){
         return res.status(403).json({
             success: false,
@@ -9,4 +9,13 @@ const providerOnly = async (req, res, next) => {
     next();
 }
 
-export default providerOnly;
+export const customerOnly = async (req, res, next) => {
+    if(req.user.role !== "customer"){
+        return res.status(403).json({
+            success: false,
+            message: "The user is not authorised to create a service"
+        })
+    }
+
+    next();
+}
