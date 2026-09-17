@@ -39,12 +39,96 @@ export const createService = async (req, res) => {
 //controller to get all service (isActive === true)
 export const getAllServices = async ( req, res ) => {
     try {
-        const services = await Service.find({
+
+        const { category, city, minPrice, maxPrice, search } = req.query;
+        let sortOption = {
+            createdAt: -1,
+        }
+
+        const filter = {
             isActive: true,
-        }).populate("provider", "name email phone")
+        }
+
+        if(category){
+            filter.category = category;
+        }
+
+        if(city){
+            filter["location.city"] = city;
+        }
+
+        if(minPrice || maxPrice){
+            filter.price = {};
+
+            if(minPrice){
+                filter.price.$gte = Number(minPrice);
+            }
+
+            if(maxPrice){
+                filter.price.$lte = Number(maxPrice);
+            }
+        }
+
+        // Search implementation
+        if(search){
+            filter.$or = [
+                {
+                    title: {
+                        $regex: search,
+                        $options: "i",
+                    },
+                },
+                {
+                    description: {
+                        $regex: search,
+                        $options: "i",
+                    },
+                },
+                {
+                    category: {
+                        $regex: search,
+                        $options: "i",
+                    },
+                },
+            ]
+        }
+
+        // Sort implementation
+        if(req.query.sort === 'price_asc'){
+            sortOption = {
+                price: 1,
+              };
+        }
+        
+        if(req.query.sort === 'price_desc'){
+            sortOption = {
+                price: -1,
+            };
+        }
+
+        //Pagination Implementation
+        const page = Math.max(Number(req.query.page) || 1, 1);
+      
+        const limit = Math.min(Math.max(Number(req.query.limit) || 10, 1), 50);
+      
+        const skip = (page - 1) * limit;
+
+        const services = await Service.find(filter)
+        .sort(sortOption).skip(skip).limit(limit)
+        .populate("provider", "name email phone")
+
+        const totalServices = await Service.countDocuments(filter);
+        const totalPages = Math.ceil(totalServices / limit)
 
         return res.status(200).json({
             success: true,
+            count: services.length,
+            pagination: {
+                totalPages,
+                totalServices,
+                page,
+                limit
+            },
             services
         })
     } catch (error) {
