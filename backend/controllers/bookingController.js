@@ -1,5 +1,6 @@
 import Booking from "../models/Booking.js";
 import Service from "../models/Service.js";
+import { canTransitionBookingStatus } from "../utils/canTransitionBookingStatus.js";
 
 export const createBooking = async (req, res) => {
     try {
@@ -125,6 +126,110 @@ export const getBookingById = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: `Internal server error: ${error}`
+        });
+    }
+}
+
+export const updateBookingStatus = async (req, res) => {
+    try {
+        const { status } = req.body;
+
+        if(!status){
+            return res.status(400).json({
+                success: false,
+                message: "Status is missing"
+            })
+        }
+        
+        const availableStatusTransition = ["accepted", "in_progress", "completed"]
+
+        if(!availableStatusTransition.includes(status)){
+            return res.status(400).json({
+                success: false,
+                message: "Invalid status transition"
+            })
+        }
+
+        const booking = await Booking.findById(req.params.id);
+
+        if(!booking){
+            return res.status(404).json({
+                success: false,
+                message: "Booking not found"
+            })
+        }
+
+        if(booking.provider._id.toString() !== req.user._id.toString()){
+            return res.status(403).json({
+                success: false,
+                message: "Your are not authorised to update the status"
+            })
+        }
+
+        if(!canTransitionBookingStatus(booking.status, status)){
+            return res.status(404).json({
+                success: false,
+                message: `Can't change the booking status from ${booking.status} to ${status}`
+            })
+        }
+
+        booking.status = status;
+
+        await booking.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Status updated successfully!",
+            booking
         })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error: ${error}`
+        });
+    }
+}
+
+export const cancelBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+
+        if(!booking){
+            return res.status(404).json({
+                success: false,
+                message: "Booking not found"
+            });
+        }
+
+        // Only customer can cancel their request 
+        if(booking.customer._id.toString() !== req.user._id.toString()){
+            return res.status(403).json({
+                success: false,
+                message: "Your are not authorised to update the status"
+            });
+        }
+
+        if(booking.status !== "pending"){
+            return res.status(400).json({
+                success: false,
+                message: `Booking cannot be cancelled when status is ${booking.status}`
+            });
+        }
+
+        booking.status = "cancelled";
+
+        await booking.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Booking cancelled successfully!",
+            booking
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error: ${error}`
+        });
     }
 }
