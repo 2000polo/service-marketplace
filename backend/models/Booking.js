@@ -25,6 +25,15 @@ const bookingSchema = new mongoose.Schema({
         type: Date,
         required: [true, "Service scheduled date is required"]
     },
+    duration: {
+        type: Number,
+        required: [true, "Duration is required"],
+        min: 15,
+    },
+    endAt: {
+        type: Date,
+        required: [true, "Service scheduled date is required"]
+    },
     address: {
         type: String,
         trim: true,

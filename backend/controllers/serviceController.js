@@ -2,15 +2,13 @@ import Service from "../models/Service.js";
 
 export const createService = async (req, res) => {
 
-    console.log("BODY", req?.body)
-
     try{
-        const { title, description, category, price, location } = req.body;
+        const { title, description, category, price, location, duration } = req.body;
 
-        if(!title || !description || !category || price === undefined) {
+        if(!title || !description || !category || price === undefined || duration === undefined) {
             return res.status(400).json({
                 success: false,
-                message: "Title, Description, Category and price are mandatory fields"
+                message: "Title, description, category, price and duration are required"
             });
         }
 
@@ -20,6 +18,7 @@ export const createService = async (req, res) => {
             description,
             category,
             price,
+            duration,
             location,
         });
 

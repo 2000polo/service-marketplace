@@ -28,13 +28,16 @@ const serviceSchema = new mongoose.Schema(
       required: [true, "Service category is required"],
       trim: true,
     },
-
     price: {
       type: Number,
       required: [true, "Service price is required"],
       min: 0,
     },
-
+    duration: {
+      type: Number,
+      required: [true, "Service duration is required"],
+      min: 15,
+    },
     location: {
       city: {
         type: String,

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Booking from "../models/Booking.js";
 import Service from "../models/Service.js";
 import { canTransitionBookingStatus } from "../utils/canTransitionBookingStatus.js";
@@ -6,10 +7,40 @@ export const createBooking = async (req, res) => {
     try {
         const { service: serviceId, address, scheduledAt } = req.body;
 
-        if(!serviceId || !address || !scheduledAt){
+        if(!serviceId || !address.trim() || !scheduledAt){
             return res.status(400).json({
                 success: false,
                 message: "Service, Adress and schedlued at are mandatory"
+            });
+        }
+
+        // if (!duration || Number(duration) < 15) {
+        //     return res.status(400).json({
+        //       success: false,
+        //       message: "Duration must be at least 15 minutes",
+        //     });
+        // }
+
+        if (!mongoose.Types.ObjectId.isValid(serviceId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid service ID",
+            });
+        }
+
+        const bookingDate = new Date(scheduledAt);
+
+        if(Number.isNaN(bookingDate.getTime())){
+            return res.status(400).json({
+                success: false,
+                message: "Invalid scheduled date",
+            });
+        }
+
+        if(bookingDate <= new Date()){
+            return res.status(400).json({
+                success: false,
+                message: "Booking date must be in the feature",
             });
         }
 
@@ -18,6 +49,13 @@ export const createBooking = async (req, res) => {
             isActive: true
         })
 
+        const bookingDuration = service.duration;
+
+        const bookingEnd = new Date(
+            bookingDate.getTime() +
+              bookingDuration * 60 * 1000
+        );
+
         if(!service){
             return res.status(404).json({
                 success: false,
@@ -25,13 +63,35 @@ export const createBooking = async (req, res) => {
             })
         }
 
-        const booking = await Booking.create({
+        const isBookingExisting = await Booking.findOne({
             provider: service.provider,
-            service: service._id,
+            scheduledAt: {
+                $lt: bookingEnd
+            },
+            endAt: {
+                $gt: bookingDate
+            },
+            status: {
+                $in: ["pending", "in_progress", "accepted"]
+            }
+        })
+
+        if(isBookingExisting){
+            return res.status(409).json({
+                success: false,
+                message: "Provider is already booked for this time"
+            })
+        }
+
+        const booking = await Booking.create({
             customer: req.user._id,
+            service: service._id,
+            provider: service.provider,
             price: service.price,
-            address,
-            scheduledAt
+            scheduledAt: bookingDate,
+            endAt: bookingEnd,
+            duration: bookingDuration,
+            address: address.trim(),
         });
 
         res.status(201).json({
