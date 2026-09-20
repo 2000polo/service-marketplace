@@ -2,6 +2,7 @@ import PublicLayout from "@/layouts/PublicLayout"
 import HomePage from "@/pages/HomePage"
 import LoginPage from "@/pages/LoginPage"
 import RegisterPage from "@/pages/RegisterPage"
+import ServiceDetailsPage from "@/pages/ServiceDetailsPage"
 import ServicesPage from "@/pages/ServicesPage"
 import { createBrowserRouter, RouterProvider } from "react-router"
 
@@ -28,6 +29,10 @@ const AppRouter = () => {
             {
                 path: '/services',
                 element: <ServicesPage />
+            },
+            {
+                path: "services/:serviceId",
+                element: <ServiceDetailsPage />,
             }
         ]
     }

@@ -11,6 +11,7 @@ import {
 import { Button } from "./ui/button";
 
 import type { Service } from "../types/service";
+import { Link } from "react-router";
 
 interface ServiceCardProps {
   service: Service;
@@ -39,7 +40,7 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground min-h-10">
           {service.description}
         </p>
 
@@ -66,9 +67,11 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
         </div>
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="mt-auto">
         <Button className="w-full">
-          View Service
+            <Link to={`/services/${service._id}`}>
+                View Service
+            </Link>
         </Button>
       </CardFooter>
     </Card>

@@ -76,3 +76,16 @@ export const getServices = async (
 
   return data;
 };
+
+export const getServiceById = async (serviceId: string): Promise<Service> => {
+
+  const response = await fetch(`${API_URL}/service/${serviceId}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch services");
+  }
+
+  const data = await response.json()
+
+  return data?.service;
+}

@@ -13,15 +13,15 @@ const Navbar = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="text-xl font-bold tracking-tight"
+          className="text-xl font-bold tracking-tight flex items-center gap-2"
         >
-          ServiceHub
+          <span className="block bg-primary h-10 w-10 flex items-center justify-center rounded-xl">S</span>ServiceHub
         </Link>
 
         {/* Desktop navigation */}
         <nav className="hidden items-center gap-2 md:flex">
           <Button variant="ghost" asChild>
-            <Link to="/">
+            <Link to="/services" className="flex items-center justify-center">
               <Search className="mr-2 size-4" />
               Services
             </Link>
