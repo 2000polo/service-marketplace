@@ -1,4 +1,5 @@
 import express from "express";
+import cors from 'cors';
 import authRoutes from './routes/authRoutes.js'
 import serviceRoutes from './routes/serviceRoutes.js'
 import bookingRoutes from './routes/bookingRoutes.js'
@@ -8,6 +9,7 @@ import reviewRoutes from './routes/reviewRoutes.js'
 const app = express();
 
 app.use(express.json());
+app.use(cors())
 
 app.use('/auth/user', authRoutes);
 app.use('/service', serviceRoutes);
