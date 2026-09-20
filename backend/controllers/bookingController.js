@@ -4,10 +4,56 @@ import Service from "../models/Service.js";
 import { canTransitionBookingStatus } from "../utils/canTransitionBookingStatus.js";
 
 export const createBooking = async (req, res) => {
+    // Starting a mongoose session to prevent double booking or booking race condition
+    const session = await mongoose.startSession();
+
     try {
+
+        session.startTransaction();
+
         const { service: serviceId, address, scheduledAt } = req.body;
 
-        if(!serviceId || !address.trim() || !scheduledAt){
+        const allowedFields = [
+            "service",
+            "scheduledAt",
+            "address",
+        ];
+          
+        const invalidFields = Object.keys(req.body).filter(
+            (field) => !allowedFields.includes(field)
+        );
+          
+        if (invalidFields.length > 0) {
+            return res.status(400).json({
+              success: false,
+              message: `Invalid fields: ${invalidFields.join(", ")}`,
+            });
+        }
+
+        const trimmedAddress = address?.trim();
+
+        if (
+            !trimmedAddress ||
+            trimmedAddress.length < 5 ||
+            trimmedAddress.length > 500
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Address must be between 5 and 500 characters",
+            });
+        }
+
+        if (
+            typeof scheduledAt !== "string" ||
+            !scheduledAt.includes("T")
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Scheduled date must be a valid ISO datetime",
+            });
+        }
+
+        if(!serviceId || !trimmedAddress || !scheduledAt){
             return res.status(400).json({
                 success: false,
                 message: "Service, Adress and schedlued at are mandatory"
@@ -44,12 +90,35 @@ export const createBooking = async (req, res) => {
             });
         }
 
+        const maxBookingDate = new Date();
+
+        maxBookingDate.setDate(
+            maxBookingDate.getDate() + 90
+        );
+
+        if (bookingDate > maxBookingDate) {
+            return res.status(400).json({
+                success: false,
+                message: "Bookings can only be made up to 90 days in advance",
+            });
+        }
+
         const service = await Service.findOne({
             _id: serviceId,
             isActive: true
-        })
+        }).session(session);
 
         const bookingDuration = service.duration;
+
+        if (
+            !Number.isInteger(bookingDuration) ||
+            bookingDuration < 15
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Service has an invalid duration",
+            });
+        }
 
         const bookingEnd = new Date(
             bookingDate.getTime() +
@@ -74,7 +143,7 @@ export const createBooking = async (req, res) => {
             status: {
                 $in: ["pending", "in_progress", "accepted"]
             }
-        })
+        }).session(session);
 
         if(isBookingExisting){
             return res.status(409).json({
@@ -83,7 +152,8 @@ export const createBooking = async (req, res) => {
             })
         }
 
-        const booking = await Booking.create({
+        const booking = await Booking.create(
+            [{
             customer: req.user._id,
             service: service._id,
             provider: service.provider,
@@ -91,20 +161,27 @@ export const createBooking = async (req, res) => {
             scheduledAt: bookingDate,
             endAt: bookingEnd,
             duration: bookingDuration,
-            address: address.trim(),
-        });
+            address: trimmedAddress,
+            }],{session}
+        );
+
+        await session.commitTransaction();
 
         res.status(201).json({
             success: true,
             message: "Booking created!",
-            booking
+            booking: booking[0]
         })
 
     } catch (error) {
+        await session.abortTransaction();
+
         return res.status(500).json({
             success: false,
             message: `Internal server error: ${error}`
         })
+    } finally {
+        await session.endSession();
     }
 };
 

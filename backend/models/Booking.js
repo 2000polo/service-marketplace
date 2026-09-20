@@ -47,6 +47,13 @@ const bookingSchema = new mongoose.Schema({
     },
 });
 
+bookingSchema.index({
+    provider: 1,
+    scheduledAt: 1,
+    endAt: 1,
+    status: 1,
+});
+
 const Booking = mongoose.model("Booking", bookingSchema);
 
 export default Booking;
