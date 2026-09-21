@@ -13,9 +13,9 @@ const Navbar = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="text-xl font-bold tracking-tight flex items-center gap-2"
+          className="text-xl font-bold tracking-tight flex items-center"
         >
-          <span className="block bg-primary h-10 w-10 flex items-center justify-center rounded-xl">S</span>ServiceHub
+          <span className="block bg-primary h-10 w-10 flex items-center justify-center rounded-xl mr-2">S</span>Service<span className="font-bold text-primary">Hub</span>
         </Link>
 
         {/* Desktop navigation */}

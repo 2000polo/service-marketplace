@@ -1,4 +1,5 @@
 import PublicLayout from "@/layouts/PublicLayout"
+import CreateBookingPage from "@/pages/customer/CreateBookingPage"
 import HomePage from "@/pages/HomePage"
 import LoginPage from "@/pages/LoginPage"
 import RegisterPage from "@/pages/RegisterPage"
@@ -33,7 +34,11 @@ const AppRouter = () => {
             {
                 path: "services/:serviceId",
                 element: <ServiceDetailsPage />,
-            }
+            },
+            {
+                path: "services/:serviceId/book",
+                element: <CreateBookingPage />,
+            },
         ]
     }
   ])

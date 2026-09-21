@@ -35,8 +35,8 @@ const ProviderCard = ({
   const provider = service.provider;
 
   return (
-    <Card className="w-full overflow-hidden rounded-xl shadow-2xl font-sans">
-      <CardContent className="space-y-6 p-6 md:p-8">
+    <Card className="col-span-12 md:col-span-4 w-full overflow-hidden rounded-xl shadow-2xl font-sans">
+      <CardContent className="space-y-6">
         {/* Header Section */}
         <div className="flex flex-col justify-start gap-3 border-b border-slate-800/80 pb-6">
           <div className="flex flex-wrap items-center ">

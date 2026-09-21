@@ -9,12 +9,13 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 import { getServiceById } from "@/api/servicesApi";
 import type { Service } from "@/types/service";
 import ServiceReviews from "@/components/service/ServiceReviews";
 import ProviderCard from "@/components/ProviderCard";
+import ReviewsComponent from "@/components/ReviewsComponent";
 
 const ServiceDetailsPage = () => {
   const { serviceId } = useParams();
@@ -93,62 +94,74 @@ const ServiceDetailsPage = () => {
         </Link>
       </Button> */}
 
-      <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
+      <div className="grid gap-8 grid-cols-12">
 
         <ProviderCard service={service} averageRating={4.5} totalReviews={12} />
 
-        {/* Main content */}
-        <Card>
-            <CardContent className="p-6">
-                <p className="text-sm text-muted-foreground">
-                    {service.category}
-                </p>
+        <div className="col-span-12 md:col-span-8 gap-8 grid">
+            {/* Main content */}
+            <Card>
+                <CardContent className="">
+                    <p className="text-sm text-muted-foreground">
+                        {service.category}
+                    </p>
 
-                <div className="flex mt-2 items-center justify-between">
-                    <h1 className=" text-3xl font-bold">
-                        {service.title}
-                    </h1>
+                    <div className="flex mt-2 items-center justify-between">
+                        <h1 className=" text-3xl font-bold">
+                            {service.title}
+                        </h1>
 
-                    <Button className="">
-                        <Link to={`/services/${service._id}`}>
-                            Book Service
-                        </Link>
-                    </Button>
-                </div>
+                        <Button className="">
+                            <Link to={`/services/${service._id}`}>
+                                Book Service
+                            </Link>
+                        </Button>
+                    </div>
 
-                <div className="mt-2 flex gap-3">
-                    <div className="flex items-center gap-3">
-                        <MapPin className="size-5 text-muted-foreground" />
+                    <div className="mt-2 flex gap-3">
+                        <div className="flex items-center gap-3">
+                            <MapPin className="size-5 text-muted-foreground" />
 
-                        <div>
-                            <p className="text-sm text-muted-foreground">
-                                Location : <span className="font-medium">{service.location?.city}</span>
-                            </p>
+                            <div>
+                                <p className="text-sm text-muted-foreground">
+                                    Location : <span className="font-medium">{service.location?.city}</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <Clock className="size-5 text-muted-foreground" />
+
+                            <div>
+                                <p className="text-sm text-muted-foreground">
+                                    Duration: <span className="font-medium">{service.duration} minutes</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <Clock className="size-5 text-muted-foreground" />
+                    <p className="mt-6 leading-7 text-muted-foreground">
+                        {service.description}
+                    </p>
+                </CardContent>
 
-                        <div>
-                            <p className="text-sm text-muted-foreground">
-                                Duration: <span className="font-medium">{service.duration} minutes</span>
-                            </p>
+                <CardFooter className="mt-auto">
+                    <div className="flex justify-between w-full items-center ">
+                        <div className="price-col">
+                            <span className="text-xs font-medium text-slate-400">Total service fee</span>
+                            <div className="text-3xl font-bold">₹ {service.price} <span className="text-xs font-medium text-slate-400">/all inclusive</span></div>
                         </div>
+                        <Button className=" ">
+                            <Link  to={`/services/${service._id}/book`}>
+                                Book Service
+                            </Link>
+                        </Button>
                     </div>
-                </div>
+                </CardFooter>
+            </Card>
 
-                <p className="mt-6 leading-7 text-muted-foreground">
-                    {service.description}
-                </p>
-
-                
-            </CardContent>
-        </Card>
-
-        <ServiceReviews
-            serviceId={service._id}
-        />
+            <ReviewsComponent serviceId={service._id} />
+        </div>
       </div>
     </section>
   );
