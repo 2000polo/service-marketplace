@@ -1,0 +1,53 @@
+import { Navigate, Outlet } from "react-router";
+
+import { useAuth } from "@/context/useAuth";
+
+interface ProtectedRouteProps {
+  allowedRoles?: ("customer" | "provider")[];
+}
+
+const ProtectedRoute = ({
+  allowedRoles,
+}: ProtectedRouteProps) => {
+  const {
+    user,
+    isAuthenticated,
+    isLoading,
+  } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-muted-foreground">
+          Loading...
+        </p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+  }
+
+  if (
+    allowedRoles &&
+    user &&
+    !allowedRoles.includes(user.role)
+  ) {
+    return (
+      <Navigate
+        to="/"
+        replace
+      />
+    );
+  }
+
+  return <Outlet />;
+};
+
+export default ProtectedRoute;

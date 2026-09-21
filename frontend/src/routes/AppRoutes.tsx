@@ -6,6 +6,12 @@ import RegisterPage from "@/pages/RegisterPage"
 import ServiceDetailsPage from "@/pages/ServiceDetailsPage"
 import ServicesPage from "@/pages/ServicesPage"
 import { createBrowserRouter, RouterProvider } from "react-router"
+import ProtectedRoute from "./ProtectedRoutes"
+import BookingsPage from "@/pages/customer/BookingsPage"
+import CustomerLayout from "@/layouts/CustomerLayout"
+import AuthLayout from "@/layouts/AuthLayout"
+import ProviderLayout from "@/layouts/ProviderLayout"
+import Dashboard from "@/pages/provider/Dashboard"
 
 
 const AppRouter = () => {
@@ -20,25 +26,60 @@ const AppRouter = () => {
                 element: <HomePage />
             },
             {
+                path: '/services',
+                element: <ServicesPage />
+            },
+            {
+                path: "/services/:serviceId",
+                element: <ServiceDetailsPage />,
+            }
+        ]
+    },
+    {
+        element: <AuthLayout />,
+        children: [
+            {
                 path: '/login',
                 element: <LoginPage />
             },
             {
                 path: '/register',
                 element: <RegisterPage />
-            },
+            }
+        ]
+    },
+    {
+        element: <ProtectedRoute allowedRoles={["customer"]} />,
+        children: [
             {
-                path: '/services',
-                element: <ServicesPage />
-            },
+                element: <CustomerLayout />,
+                children: [
+                    {
+                        path: "bookings",
+                        element: <BookingsPage />,
+                    },
+                    {
+                        path: "/services/:serviceId/book",
+                        element: <CreateBookingPage />,
+                    }
+                ],
+            }
+            
+        ]
+    },
+    {
+        element: <ProtectedRoute allowedRoles={["provider"]} />,
+        children: [
             {
-                path: "services/:serviceId",
-                element: <ServiceDetailsPage />,
-            },
-            {
-                path: "services/:serviceId/book",
-                element: <CreateBookingPage />,
-            },
+                element: <ProviderLayout />,
+                children: [
+                    {
+                        path: "dashboard",
+                        element: <Dashboard />,
+                    }
+                ],
+            }
+            
         ]
     }
   ])
