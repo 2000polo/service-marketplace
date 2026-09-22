@@ -1,8 +1,8 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 export interface AvailabilitySlot {
-  start: string;
-  end: string;
+    startTime: string;
+    endTime: string;
 }
 
 export interface AvailabilityResponse {

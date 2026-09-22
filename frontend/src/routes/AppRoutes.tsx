@@ -12,6 +12,7 @@ import CustomerLayout from "@/layouts/CustomerLayout"
 import AuthLayout from "@/layouts/AuthLayout"
 import ProviderLayout from "@/layouts/ProviderLayout"
 import Dashboard from "@/pages/provider/Dashboard"
+import BookingDetailPage from "@/pages/customer/BookingDetailPage"
 
 
 const AppRouter = () => {
@@ -57,6 +58,10 @@ const AppRouter = () => {
                     {
                         path: "bookings",
                         element: <BookingsPage />,
+                    },
+                    {
+                        path: "/booking/:id",
+                        element: <BookingDetailPage />,
                     },
                     {
                         path: "/services/:serviceId/book",

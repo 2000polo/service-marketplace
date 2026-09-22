@@ -9,7 +9,7 @@ const protect = async (req, res, next) => {
             return res.status(401).json({
                 success: false,
                 message: "Not authorized. Token is missing.",
-              });
+			});
         }
 
         const token = authHeader.split(" ")[1];
@@ -23,10 +23,10 @@ const protect = async (req, res, next) => {
         const user = await User.findById(decode.userId).select("-password"); 
 
         if (!user) {
-          return res.status(401).json({
-            success: false,
-            message: "User no longer exists.",
-          });
+			return res.status(401).json({
+				success: false,
+				message: "User no longer exists.",
+			});
         }
     
         //here we attach the user data to the request
@@ -39,7 +39,7 @@ const protect = async (req, res, next) => {
         return res.status(401).json({
             success: false,
             message: "Not authorized. Invalid or expired token.",
-          });
+		});
     }
 }
 

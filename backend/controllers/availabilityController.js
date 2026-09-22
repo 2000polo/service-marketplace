@@ -179,19 +179,26 @@ export const getAvailableSlots = async (req, res) => {
 
         // Validate date
         if (!date) {
-        return res.status(400).json({
-            success: false,
-            message: "Date is required",
-        });
+          return res.status(400).json({
+              success: false,
+              message: "Date is required",
+          });
         }
 
         const selectedDate = new Date(`${date}T00:00:00.000Z`);
 
         if (Number.isNaN(selectedDate.getTime())) {
-        return res.status(400).json({
-            success: false,
-            message: "Invalid date",
-        });
+          return res.status(400).json({
+              success: false,
+              message: "Invalid date",
+          });
+        }
+        
+        if(selectedDate.getDate() < new Date().getDate()){
+          return res.status(400).json({
+              success: false,
+              message: "Booking date must be in the feature",
+          });
         }
 
         // Check provider
@@ -336,6 +343,8 @@ export const getAvailableSlots = async (req, res) => {
                         slot,
                         booking,
                         overlap,
+                        slotStart,
+                        slotEnd
                     });
             
                     return overlap;
@@ -347,7 +356,7 @@ export const getAvailableSlots = async (req, res) => {
 
         console.log("availableSlots", availableSlots)
 
-        // Removing pas time if the booking date is today
+        // Removing past time if the booking date is today
         const now = new Date();
         const isToday = date === now.toISOString().split("T")[0];
 
@@ -357,8 +366,8 @@ export const getAvailableSlots = async (req, res) => {
 
         if (isToday) {
             const currentMinutes =
-                now.getUTCHours() * 60 +
-                now.getUTCMinutes();
+                now.getHours() * 60 +
+                now.getMinutes();
 
             finalSlots = availableSlots.filter((slot) => {
                     const slotStart = timeToMinutes(

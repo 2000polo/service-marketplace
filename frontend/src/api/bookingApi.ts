@@ -23,6 +23,46 @@ export interface BookingResponse {
   };
 }
 
+export interface Booking {
+    _id: string;
+    customer: {
+        _id: string;
+        name: string;
+        email: string;
+    };
+    service: {
+        _id: string;
+        title: string;
+        category: string;
+        price: number;
+        duration: number;
+    };
+    provider: {
+        _id: string;
+        name: string;
+        email: string;
+        phone?: string;
+    };
+    price: number;
+    scheduledAt: string;
+    duration: number;
+    endAt: string;
+    address: string;
+    status: | "pending" | "accepted" | "in_progress" | "completed" | "cancelled";
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface GetBookingResponse {
+    success: boolean;
+    booking: Booking;
+}
+
+export interface GetBookingsResponse {
+    success: boolean;
+    bookings: Booking[];
+}
+
 export const createBooking = async (
   bookingData: CreateBookingData,
   token: string
@@ -45,4 +85,51 @@ export const createBooking = async (
   }
 
   return data;
+};
+
+export const getBookingById = async (
+    bookingId: string,
+    token: string
+): Promise<GetBookingResponse> => {
+    const response = await fetch(
+        `${API_URL}/bookings/${bookingId}`,
+        {
+            headers: {
+            Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+  
+    const data = await response.json();
+  
+    if (!response.ok) {
+        throw new Error(
+            data.message || "Failed to fetch booking"
+        );
+    }
+  
+    return data;
+};
+
+export const getBookings = async (
+    token: string
+): Promise<GetBookingsResponse> => {
+    const response = await fetch(
+        `${API_URL}/bookings`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.message || "Failed to fetch bookings"
+        );
+    }
+
+    return data;
 };
