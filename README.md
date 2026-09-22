@@ -1,5 +1,7 @@
 # 🛠️ Service Marketplace
 
+<img src="./assets/service-marketplace-thumbnail.png" alt="Login Page">
+
 > A full-stack service booking platform where customers can discover local services, check real-time availability, and book providers — built from scratch while transitioning from frontend development into full-stack engineering.
 
 <p align="center">
@@ -43,7 +45,6 @@ This project was built as a practical transition from **frontend development int
 ---
 
 ## 📸 Application Screenshots
-<img src="./assets/landing-page.png" alt="Login Page">
 
 ### 🏠 Service Discovery
 <img src="./assets/landing-page.png" alt="Login Page">
