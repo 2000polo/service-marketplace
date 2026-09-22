@@ -4,8 +4,6 @@ import {
   ArrowLeft,
   Clock,
   MapPin,
-  Phone,
-  User,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -13,7 +11,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 import { getServiceById } from "@/api/servicesApi";
 import type { Service } from "@/types/service";
-import ServiceReviews from "@/components/service/ServiceReviews";
 import ProviderCard from "@/components/ProviderCard";
 import ReviewsComponent from "@/components/ReviewsComponent";
 

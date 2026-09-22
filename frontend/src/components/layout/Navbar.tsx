@@ -1,4 +1,4 @@
-import { ChevronDown, LogOut, LogOutIcon, Menu, Search, X } from "lucide-react";
+import { LogOut, LogOutIcon, Menu, Search, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 
@@ -10,9 +10,8 @@ import { useAuth } from "@/context/useAuth";
 import {
     Avatar,
     AvatarFallback,
-    AvatarImage,
 } from "@/components/ui/avatar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 const getInitials = (name = "") => {
     return name
@@ -25,7 +24,6 @@ const getInitials = (name = "") => {
   
 const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     const navigate = useNavigate();
   
@@ -38,7 +36,6 @@ const Navbar = () => {
     const handleLogout = () => {
       logout();
   
-      setIsProfileOpen(false);
       setIsMobileMenuOpen(false);
   
       toast.success("Logged out successfully");

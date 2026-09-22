@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { Eye, EyeOff, MapPin, User, Briefcase } from "lucide-react";
+import { Eye, EyeOff, User, Briefcase } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { registerUser, type RegisterData } from "@/api/authApi";

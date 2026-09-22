@@ -303,7 +303,11 @@ const ReviewsComponent = ({
           {/* Sort Dropdown */}
           <Select
             value={sortBy}
-            onValueChange={setSortBy}
+            onValueChange={(value) => {
+                if (value !== null) {
+                    setSortBy(value);
+                }
+            }}
           >
             <SelectTrigger className="h-9 w-full rounded-lg text-xs text-slate-300 sm:w-[180px]">
               <SelectValue placeholder="Sort by" />

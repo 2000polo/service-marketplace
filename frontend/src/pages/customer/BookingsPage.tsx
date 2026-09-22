@@ -287,7 +287,6 @@ const BookingsPage = () => {
         <div className="space-y-4">
           {filteredBookings.map((booking) => {
             const statusConfig = getStatusBadge(booking.status);
-            const StatusIcon = statusConfig.icon;
 
             return (
               <article

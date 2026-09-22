@@ -3,17 +3,15 @@ import { Link, useNavigate, useParams } from "react-router";
 import { format } from "date-fns";
 
 import {
-  ArrowLeft,
-  Calendar as CalendarIcon,
   Clock,
   CheckCircle2,
   ShieldCheck,
   Star,
   MapPin,
   Sparkles,
-  UserCheck,
   CreditCard,
   Info,
+  CalendarIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -189,7 +187,7 @@ const CreateBookingPage = () => {
               <div className="flex flex-col md:flex-row md:items-center justify-between rounded-xl border bg-muted/30 p-4">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-12 w-12 border">
-                    <AvatarImage src={service.provider?.avatarUrl} alt={service.provider?.name} />
+                    <AvatarImage src={''} alt={service.provider?.name} />
                     <AvatarFallback className="bg-primary/10 font-semibold text-primary">
                       {service.provider?.name?.substring(0, 2).toUpperCase() || "PV"}
                     </AvatarFallback>
@@ -313,7 +311,6 @@ const CreateBookingPage = () => {
                     today.setHours(0, 0, 0, 0);
                     return date < today;
                   }}
-                  initialFocus
                   className="rounded-md w-full"
                 />
               </div>
