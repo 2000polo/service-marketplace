@@ -146,7 +146,7 @@ const CreateBookingPage = () => {
           <p className="text-sm font-medium text-destructive">
             Service not found or may have been removed.
           </p>
-          <Button variant="outline" size="sm" className="mt-4" asChild>
+          <Button variant="outline" size="sm" className="mt-4" >
             <Link to="/services">Back to Services</Link>
           </Button>
         </div>

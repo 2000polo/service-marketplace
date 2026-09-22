@@ -164,7 +164,7 @@ const BookingDetailPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild variant="default">
+            <Button  variant="default">
               <Link to="/bookings">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to bookings
@@ -295,7 +295,7 @@ const BookingDetailPage = () => {
                   </div>
                 </div>
 
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="outline" size="sm" >
                   <a href={`mailto:${booking.provider.email}`}>Contact</a>
                 </Button>
               </div>
@@ -344,7 +344,7 @@ const BookingDetailPage = () => {
               </CardHeader>
               <CardContent>
                 <AlertDialog>
-                  <AlertDialogTrigger asChild>
+                  <AlertDialogTrigger >
                     <Button variant="destructive" className="w-full" size="sm">
                       Cancel Booking
                     </Button>

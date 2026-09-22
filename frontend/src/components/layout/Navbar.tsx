@@ -67,7 +67,7 @@ const Navbar = () => {
           {/* Desktop navigation */}
           <nav className="hidden items-center gap-2 md:flex">
   
-            <Button variant="ghost" asChild>
+            <Button variant="ghost" >
               <Link
                 to="/services"
                 className="flex items-center justify-center"
@@ -80,7 +80,7 @@ const Navbar = () => {
             {isAuthenticated && (
               <>
                 {user?.role === "customer" && (
-                  <Button variant="ghost" asChild>
+                  <Button variant="ghost" >
                     <Link to="/bookings">
                       My Bookings
                     </Link>
@@ -88,7 +88,7 @@ const Navbar = () => {
                 )}
   
                 {user?.role === "provider" && (
-                  <Button variant="ghost" asChild>
+                  <Button variant="ghost" >
                     <Link to="/provider">
                       Dashboard
                     </Link>
@@ -161,13 +161,13 @@ const Navbar = () => {
   
             {!isAuthenticated && (
               <>
-                <Button variant="ghost" asChild>
+                <Button variant="ghost" >
                   <Link to="/login">
                     Login
                   </Link>
                 </Button>
   
-                <Button asChild>
+                <Button >
                   <Link to="/register">
                     Get Started
                   </Link>
@@ -205,7 +205,7 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 className="justify-start"
-                asChild
+                
               >
                 <Link
                   to="/services"
@@ -224,7 +224,7 @@ const Navbar = () => {
                     <Button
                       variant="ghost"
                       className="justify-start"
-                      asChild
+                      
                     >
                       <Link
                         to="/bookings"
@@ -241,7 +241,7 @@ const Navbar = () => {
                     <Button
                       variant="ghost"
                       className="justify-start"
-                      asChild
+                      
                     >
                       <Link
                         to="/provider"
@@ -268,7 +268,7 @@ const Navbar = () => {
                   <Button
                     variant="ghost"
                     className="justify-start"
-                    asChild
+                    
                   >
                     <Link
                       to="/login"
@@ -282,7 +282,7 @@ const Navbar = () => {
   
                   <Button
                     className="justify-start"
-                    asChild
+                    
                   >
                     <Link
                       to="/register"

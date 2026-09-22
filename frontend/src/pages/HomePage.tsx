@@ -329,7 +329,7 @@ const HomePage = () => {
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" asChild className="h-12 px-8 font-semibold">
+              <Button size="lg" className="h-12 px-8 font-semibold">
                 <Link to="/services">Explore Services Now</Link>
               </Button>
             </div>

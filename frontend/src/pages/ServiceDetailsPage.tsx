@@ -70,7 +70,7 @@ const ServiceDetailsPage = () => {
   if (error || !service) {
     return (
       <section className="mx-auto max-w-5xl px-6 py-10">
-        <Button variant="ghost" asChild>
+        <Button variant="ghost" >
           <Link to="/services">
             <ArrowLeft />
             Back to services
@@ -87,7 +87,7 @@ const ServiceDetailsPage = () => {
   return (
     <section className="mx-auto max-w-7xl px-6 py-10">
       {/* Back */}
-      {/* <Button variant="ghost" asChild>
+      {/* <Button variant="ghost" >
         <Link to="/services" className="flex gap-2 items-center justify-center">
           <ArrowLeft />
           Back to services

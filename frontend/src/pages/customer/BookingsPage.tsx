@@ -23,34 +23,34 @@ import { getBookings, type Booking } from "../../api/bookingApi";
 import { useAuth } from "@/context/useAuth";
 
 // Optional type helper if not in original import
-type BookingStatus = "pending" | "accepted" | "in_progress" | "completed" | "cancelled";
-
 const BookingsPage = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<string>("all");
+    const [bookings, setBookings] = useState<Booking[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [activeTab, setActiveTab] = useState<string>("all");
 
-  const { token } = useAuth();
+    const { token } = useAuth();
 
   useEffect(() => {
 
     const fetchBookings = async () => {
-        setIsLoading(true);
-        try {
-          const data = await getBookings(token);
-          setBookings(data.bookings);
-        } catch (error) {
-          toast.error(
-            error instanceof Error ? error.message : "Failed to load bookings"
-          );
-        } finally {
-          setIsLoading(false);
+        if(token){
+            setIsLoading(true);
+            try {
+                const data = await getBookings(token);
+                setBookings(data.bookings);
+            } catch (error) {
+                toast.error(
+                    error instanceof Error ? error.message : "Failed to load bookings"
+                );
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
     fetchBookings();
-  }, []);
+  }, [token]);
 
   const formatDate = (date: string) => {
     return new Intl.DateTimeFormat("en-IN", {
