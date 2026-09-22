@@ -133,3 +133,31 @@ export const getBookings = async (
 
     return data;
 };
+
+export const cancelBooking = async (
+    bookingId: string,
+    token: string
+): Promise<GetBookingResponse> => {
+    if(!bookingId){
+        throw new Error("invalid booking id");
+    }
+
+    const response = await fetch(
+        `${API_URL}/bookings/${bookingId}/cancel`, {
+            method: 'PATCH',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    const data = await response.json();
+
+    if(!response.ok){
+        throw new Error(
+            data.message || "Failed to cancel booking"
+        );
+    }
+
+    return data;
+}

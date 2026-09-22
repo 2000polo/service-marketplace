@@ -40,7 +40,7 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground min-h-10">
+        <p className="text-sm text-muted-foreground min-h-10 line-clamp-3">
           {service.description}
         </p>
 

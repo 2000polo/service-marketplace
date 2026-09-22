@@ -140,7 +140,7 @@ const ServiceDetailsPage = () => {
                         </div>
                     </div>
 
-                    <p className="mt-6 leading-7 text-muted-foreground">
+                    <p className="mt-6 leading-5 text-muted-foreground ">
                         {service.description}
                     </p>
                 </CardContent>
