@@ -81,24 +81,26 @@ const ProviderCard = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-sm text-slate-300 mt-4">
-                <Mail className="h-4 w-4 text-sky-400" />
+            <div className="">
+                <div className="flex flex-1 items-center gap-2 text-sm text-slate-300 mt-4">
+                    <Mail className="h-4 w-4 text-sky-400" />
 
-                <span className="truncate">
-                {provider.email}
-                </span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-slate-300 mt-2">
-                <Phone className="h-4 w-4 text-sky-400" />
+                    <span className="truncate">
+                    {provider.email}
+                    </span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-300 mt-2">
+                    <Phone className="h-4 w-4 text-sky-400" />
 
-                {provider.phone ? (
-                <span>{provider.phone}</span>
-                ) : (
-                <span className="text-slate-500">
-                    Phone not provided
-                </span>
-                )}
-            </div>
+                    {provider.phone ? (
+                    <span>{provider.phone}</span>
+                    ) : (
+                    <span className="text-slate-500">
+                        Phone not provided
+                    </span>
+                    )}
+                </div>
+                </div>
           </div>
 
           {/* Contact Button */}

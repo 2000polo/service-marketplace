@@ -2,8 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 
 import {
   Select,
@@ -15,25 +13,15 @@ import {
 
 import {
   Star,
-  Check,
-  ThumbsUp,
 } from "lucide-react";
 
 import type { Review } from "@/types/review";
 import { getServiceReviews } from "@/api/reviewApi";
+import ReviewBox from "./ReviewBox";
 
 interface ReviewsComponentProps {
   serviceId: string;
 }
-
-const getInitials = (name: string) => {
-  return name
-    .split(" ")
-    .map((word) => word[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-};
 
 const ReviewsComponent = ({
   serviceId,
@@ -140,6 +128,8 @@ const ReviewsComponent = ({
 
     return result;
   }, [reviews, activeTab, sortBy]);
+
+  console.log('filteredReviews', filteredReviews)
 
   if (isLoading) {
     return (
@@ -338,84 +328,11 @@ const ReviewsComponent = ({
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredReviews.map((review) => (
-              <div
-                key={review._id}
-                className="space-y-4 rounded-xl border p-4"
-              >
-                {/* Review Header */}
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10 border border-purple-700/50 bg-purple-900/80 text-purple-200">
-                      <AvatarFallback className="bg-purple-900/80 text-sm font-bold">
-                        {getInitials(review.customer.name)}
-                      </AvatarFallback>
-                    </Avatar>
-
-                    <div className="space-y-0.5">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h4 className="text-sm font-bold text-white">
-                          {review.customer.name}
-                        </h4>
-
-                        <Badge className="flex items-center gap-1 rounded-full border border-emerald-800/60 bg-emerald-950/80 px-2 py-0.5 text-[10px] font-medium text-emerald-400 hover:bg-emerald-950/80">
-                          <Check className="h-3 w-3" />
-                          Verified Hire
-                        </Badge>
-                      </div>
-
-                      <p className="text-xs font-medium text-slate-400">
-                        Reviewed{" "}
-                        {new Date(
-                          review.createdAt
-                        ).toLocaleDateString()}
-                        {" "}• Completed Service
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Rating */}
-                  <div className="flex shrink-0 gap-0.5 text-amber-400">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className={`h-4 w-4 ${
-                          star <= review.rating
-                            ? "fill-amber-400 stroke-amber-400"
-                            : "fill-transparent stroke-slate-600"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Review Text */}
-                {review.comment ? (
-                  <p className="text-sm leading-relaxed text-slate-300">
-                    {review.comment}
-                  </p>
-                ) : (
-                  <p className="text-sm italic text-slate-500">
-                    This customer left a rating without a comment.
-                  </p>
-                )}
-
-                {/* Helpful Feedback */}
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-xs font-medium text-slate-400">
-                    Verified review from a completed booking
-                  </span>
-
-                  <button
-                    type="button"
-                    className="flex items-center gap-1.5 text-xs text-slate-400 transition-colors hover:text-slate-200"
-                  >
-                    <ThumbsUp className="h-3.5 w-3.5" />
-                    <span>Helpful</span>
-                  </button>
-                </div>
-              </div>
-            ))}
+            {
+              filteredReviews.map((review: Review) => (
+                <ReviewBox reviewData={review} />
+              ))
+            }
           </div>
         )}
       </CardContent>

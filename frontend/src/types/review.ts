@@ -27,3 +27,10 @@ summary: {
 
 reviews: Review[];
 }
+
+
+export interface CreateReviewsResponse {
+  success: boolean;
+  message: string;
+  review: Review;
+  }

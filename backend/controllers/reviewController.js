@@ -138,3 +138,41 @@ export const getServiceReviews = async (req, res) => {
         });
     }
 }
+
+export const getBookingReview = async (req, res) => {
+    try{
+        const { bookingId } = req.params; 
+
+        // Vlidate the booking Id 
+        if(!mongoose.Types.ObjectId.isValid(bookingId)){
+            res.status(400).json({
+                success: false,
+                message: "Invalid booking!"
+            })
+        }
+
+        const review = await Review.findOne({
+            booking: bookingId,
+            customer: req.user._id
+        })
+
+        if(!review){
+            res.status(400).json({
+                success: false,
+                message: "No reviews found!"
+            })
+        } 
+
+        res.status(200).json({
+            success: true,
+            review,
+        });
+
+        console.log('review', review)
+    }catch(error) {
+        res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
