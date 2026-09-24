@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
-import toast from "react-hot-toast";
+import toast  from "react-hot-toast";
 import {
   ArrowLeft,
   Calendar,
@@ -12,6 +12,7 @@ import {
   AlertCircle,
   XCircle,
   Loader2,
+  Star,
 } from "lucide-react";
 
 import {
@@ -44,6 +45,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { createServiceReview, getBookingReview } from "@/api/reviewApi";
+import { type Review } from "@/types/review";
+import ReviewBox from "@/components/ReviewBox";
+
+const ratingLabels = [
+  "Very poor",
+  "Poor",
+  "Okay",
+  "Good",
+  "Excellent",
+];
 
 const BookingDetailPage = () => {
   const { id } = useParams();
@@ -53,6 +67,42 @@ const BookingDetailPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isCancelling, setIsCancelling] = useState<boolean>(false);
+
+  // Review rating
+  const [review, setReview] = useState<Review | null >(null);
+  const [rating, setRating] = useState(0);
+  const [hoveredRating, setHoveredRating] = useState(0);
+  const [feedback, setFeedback] = useState("");
+  const [reviewError, setReviewError] = useState("");
+
+  const activeRating = hoveredRating || rating;
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!rating || !feedback.trim() || !booking || !token) return;
+
+    try {
+      const review = await createServiceReview({
+        bookingId: booking?._id,
+        rating: rating,
+        comment: feedback
+      }, token)
+
+      setReview(review.review)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to add review");
+      setReviewError(error instanceof Error ? error.message : "Failed to add review")
+    }
+
+    // Submit review
+    console.log({
+      rating,
+      feedback: feedback.trim(),
+    });
+  };
+
+  console.log("review", review, reviewError)
 
   useEffect(() => {
     const fetchBooking = async () => {
@@ -73,7 +123,20 @@ const BookingDetailPage = () => {
       }
     };
 
+    const fetchBookingReview = async () => {
+      if (!id || !token) return;
+      try {
+        const data = await getBookingReview(id, token);
+
+        setReview(data.review)
+
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Failed to load booking details");
+      }
+    }
+ 
     fetchBooking();
+    fetchBookingReview();
   }, [id, token]);
 
   const handleCancelBooking = async () => {
@@ -379,6 +442,160 @@ const BookingDetailPage = () => {
               </CardContent>
             </Card>
           )}
+
+          {/* Review Action Card */}
+          {
+            booking.status === "completed" && (
+              <Card className="border-green-400 bg-green-400/5">
+                <CardHeader>
+                  <CardTitle className="text-sm font-semibold text-green-400">
+                    Service Completed 
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Need to reschedule or change plans? You can cancel this pending booking.
+                  </CardDescription>
+                </CardHeader>
+
+                {
+                  !review?._id &&
+                  (
+                    <CardContent>
+                      <AlertDialog>
+                        <AlertDialogTrigger >
+                          <Button variant="default" className="w-full bg-green-600 hover:bg-green-400/90 hover:shadow-2xl" size="sm">
+                            Add review
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Rate your experience</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              How was your experience with this service? Share your feedback to help other customers make better decisions and help service providers improve their experience{" "}
+                            </AlertDialogDescription>
+                              {/* Add a reivew submission form with review reating */}
+                              <AlertDialogContent className="sm:max-w-lg">
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Rate your experience</AlertDialogTitle>
+
+                                  <AlertDialogDescription>
+                                    Your feedback helps service providers improve and helps others make
+                                    better choices.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+
+                                <form onSubmit={handleSubmit} className="space-y-6">
+                                  {/* Rating */}
+                                  <div className="space-y-3">
+                                    <Label>
+                                      How would you rate this service?
+                                      <span className="text-destructive ml-1">*</span>
+                                    </Label>
+
+                                    <div
+                                      className="flex items-center gap-1"
+                                      role="radiogroup"
+                                      aria-label="Service rating"
+                                      onMouseLeave={() => setHoveredRating(0)}
+                                    >
+                                      {ratingLabels.map((label, index) => {
+                                        const value = index + 1;
+                                        const isActive = value <= activeRating;
+
+                                        return (
+                                          <button
+                                            key={value}
+                                            type="button"
+                                            role="radio"
+                                            aria-checked={rating === value}
+                                            aria-label={`${value} out of 5, ${label}`}
+                                            onClick={() => setRating(value)}
+                                            onMouseEnter={() => setHoveredRating(value)}
+                                            className="rounded-md p-1.5 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                          >
+                                            <Star
+                                              className={`size-8 transition-colors ${
+                                                isActive
+                                                  ? "fill-amber-400 text-amber-400"
+                                                  : "fill-transparent"
+                                              }`}
+                                            />
+                                          </button>
+                                        );
+                                      })}
+                                    </div>
+
+                                    {/* <div
+                                      className="min-h-5 text-sm text-muted-foreground"
+                                      aria-live="polite"
+                                    >
+                                      {activeRating > 0 && ratingLabels[activeRating - 1]}
+                                    </div> */}
+                                  </div>
+
+                                  {/* Feedback */}
+                                  <div className="space-y-3">
+                                    <div className="flex items-center justify-between gap-4">
+                                      <Label htmlFor="review-feedback">
+                                        Share your feedback
+                                        <span className="text-destructive ml-1">*</span>
+                                      </Label>
+
+                                      <span className="text-xs text-muted-foreground">
+                                        {feedback.length}/500
+                                      </span>
+                                    </div>
+
+                                    <Textarea
+                                      id="review-feedback"
+                                      value={feedback}
+                                      maxLength={500}
+                                      onChange={(e) => setFeedback(e.target.value)}
+                                      placeholder="Tell us about your experience with this service..."
+                                      className="min-h-32 resize-none"
+                                    />
+
+                                    {/* <p className="text-xs text-muted-foreground">
+                                      What did you like? Was there anything that could be improved?
+                                    </p> */}
+                                  </div>
+
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      type="submit"
+                                      className="bg-green-600 text-destructive-foreground hover:bg-green-400/90"
+                                    >
+                                      {isCancelling ? (
+                                        <>
+                                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                          Submitting...
+                                        </>
+                                      ) : (
+                                        "Submit Review"
+                                      )}
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </form>
+                            </AlertDialogContent>
+                          </AlertDialogHeader>
+                          
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </CardContent>
+                  )
+                }
+
+                
+              </Card>
+            )
+          }
+
+          {
+            review?._id && 
+            (
+              <ReviewBox reviewData={review} />
+            )
+          }
         </div>
       </div>
     </div>
