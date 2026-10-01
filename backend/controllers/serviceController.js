@@ -249,3 +249,33 @@ export const deleteService = async (req, res) => {
         })
     }
 }
+
+// API to get the services of proider 
+export const getProviderServices = async (req, res) => {
+    try {
+
+        const services = await Service.find({
+            provider: req.user._id, 
+        })
+
+        if(!services){
+            return res.status(404).json({
+                success: false,
+                message: "No Services found!"
+            })
+        }
+
+        console.log("services", services)
+
+        res.status(200).json({
+            success: true,
+            services: services
+        })
+
+    }catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`
+        })
+    }
+}

@@ -11,8 +11,10 @@ import BookingsPage from "@/pages/customer/BookingsPage"
 import CustomerLayout from "@/layouts/CustomerLayout"
 import AuthLayout from "@/layouts/AuthLayout"
 import ProviderLayout from "@/layouts/ProviderLayout"
-import Dashboard from "@/pages/provider/Dashboard"
 import BookingDetailPage from "@/pages/customer/BookingDetailPage"
+import ProviderDashboard from "@/pages/provider/ProviderDashboard"
+import ProviderServices from "@/pages/provider/ProviderServices"
+import ProviderBookings from "@/pages/provider/ProviderBookings"
 
 
 const AppRouter = () => {
@@ -76,11 +78,20 @@ const AppRouter = () => {
         element: <ProtectedRoute allowedRoles={["provider"]} />,
         children: [
             {
+                path: "/provider",
                 element: <ProviderLayout />,
                 children: [
                     {
-                        path: "dashboard",
-                        element: <Dashboard />,
+                        index: true,
+                        element: <ProviderDashboard />,
+                    },
+                    {
+                        path: "services",
+                        element: <ProviderServices />,
+                    },
+                    {
+                        path: "bookings",
+                        element: <ProviderBookings />,
                     }
                 ],
             }
@@ -94,3 +105,19 @@ const AppRouter = () => {
 }
 
 export default AppRouter
+
+// src/
+// ├── layouts/
+// │   ├── CustomerLayout.tsx
+// │   └── ProviderLayout.tsx
+// │
+// ├── pages/
+// │   ├── customer/
+// │   │   └── ...
+// │   │
+// │   └── provider/
+// │       ├── ProviderDashboard.tsx
+// │       ├── ProviderServices.tsx
+// │       ├── ProviderBookings.tsx
+// │       ├── ProviderAvailability.tsx
+// │       └── ProviderReviews.tsx

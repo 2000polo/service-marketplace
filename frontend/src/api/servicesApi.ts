@@ -89,3 +89,20 @@ export const getServiceById = async (serviceId: string): Promise<Service> => {
 
   return data?.service;
 }
+
+export const getProviderService = async (token: string): Promise<ServicesResponse> => {
+  const response = await fetch(`${API_URL}/service/my`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch services");
+  }
+
+  const data = await response.json();
+
+  return data;
+}
