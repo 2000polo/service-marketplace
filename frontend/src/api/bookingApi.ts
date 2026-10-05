@@ -1,3 +1,5 @@
+import type { GetScrollRestorationKeyFunction } from "react-router";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 export interface CreateBookingData {
@@ -29,6 +31,7 @@ export interface Booking {
         _id: string;
         name: string;
         email: string;
+        phone: string;
     };
     service: {
         _id: string;
