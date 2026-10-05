@@ -21,7 +21,9 @@ const ProviderDashboard = () => {
         (service) => service.isActive
     ).length;
 
-    const { data: bookingsData, error: bookingsError, isLoading: bookingLoading } = useQuery({
+    const { data: bookingsData, 
+        // error: bookingsError, isLoading: bookingLoading 
+    } = useQuery({
         queryKey: ["provider", "bookings"],
         queryFn: () => getBookings(token!),
         enabled: !!token,
