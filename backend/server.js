@@ -1,12 +1,15 @@
 import "dotenv/config";
 import app from "./app.js";
 import connectDB from "./config/db.js";
+import startBookingExpirationJob from "./jobs/bookingExpirationJob.js";
 
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
     try {
         await connectDB();
+
+        startBookingExpirationJob();
 
         app.listen(PORT, "0.0.0.0", () => {
             console.log(`Backend is listening on port ${PORT}`);
